@@ -20,7 +20,7 @@ class Line():
 
 class Cell():
 
-    def __init__(self, win, 
+    def __init__(self, win=None, 
                  has_left_wall=True, has_right_wall=True, has_top_wall=True, has_bottom_wall=True
                  ):
         self.has_left_wall = has_left_wall
@@ -39,18 +39,24 @@ class Cell():
         self.__y1 = y1
         self.__y2 = y2
         fill_color = "black"
-        if self.has_left_wall:
-            line = Line(Point(self.__x1, self.__y1), Point(self.__x1, self.__y2))
-            self.__win.draw_line(line, fill_color)
-        if self.has_top_wall:
-            line = Line(Point(self.__x1, self.__y1), Point(self.__x2, self.__y1))
-            self.__win.draw_line(line, fill_color)
-        if self.has_bottom_wall:
-            line = Line(Point(self.__x1, self.__y2), Point(self.__x2, self.__y2))
-            self.__win.draw_line(line, fill_color)
-        if self.has_right_wall:
-            line = Line(Point(self.__x2, self.__y1), Point(self.__x2, self.__y2))
-            self.__win.draw_line(line, fill_color)
+        blank_color = "#d9d9d9"
+
+        if self.__win is None:
+            return
+        
+        lines = [None for i in range(4)] # left, top, right, bottom
+        walls = [self.has_left_wall, self.has_top_wall, self.has_right_wall, self.has_bottom_wall]
+
+        lines[0] = Line(Point(self.__x1, self.__y1), Point(self.__x1, self.__y2)) # left
+        lines[1] = Line(Point(self.__x1, self.__y1), Point(self.__x2, self.__y1)) # top
+        lines[2] = Line(Point(self.__x2, self.__y1), Point(self.__x2, self.__y2)) # right
+        lines[3] = Line(Point(self.__x1, self.__y2), Point(self.__x2, self.__y2)) # bottom
+        
+        for i in range(4):
+            if walls[i]:
+                self.__win.draw_line(lines[i], fill_color)
+            else:
+                self.__win.draw_line(lines[i], blank_color)
 
     def draw_move(self, to_cell, undo=False):
         me_x = 0.5*(self.__x1 + self.__x2)
@@ -62,4 +68,6 @@ class Cell():
         else:
             fill_color = "gray"
         line = Line(Point(me_x, me_y),Point(to_x, to_y))
+        if self.__win is None:
+            return
         self.__win.draw_line(line, fill_color)

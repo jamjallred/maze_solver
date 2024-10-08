@@ -16,8 +16,11 @@ def main():
     # for line in lines:
     #     win.draw_line(line, "black")
 
-    # c = Cell(win, has_bottom_wall=False)
-    # c.draw(100,100,500,500)
+    c = Cell(win)
+    d = Cell(win)
+    c.draw(100,100,200,200)
+    d.draw(200,200,300,300)
+    c.draw_move(d, undo=True)
 
     win.wait_for_close()
 
